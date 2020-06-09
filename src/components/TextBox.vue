@@ -1,10 +1,6 @@
 <template>
   <div class="textbox-container">
-    <textarea
-      placeholder="ここに入力"
-      class="textbox-input"
-      v-model.trim="body"
-    ></textarea>
+    <textarea placeholder="ここに入力" class="textbox-input" v-model.trim="body"></textarea>
     <div class="textbox-button">
       <Button title="投稿" :onClick="post" />
     </div>
@@ -12,22 +8,41 @@
 </template>
 
 <script>
-import Button from './Button';
+import Button from "./Button";
 
 export default {
   components: {
-    Button,
+    Button
+  },
+  props: {
+    onPost: {
+      type: Function,
+      required: true
+    }
   },
   data() {
     return {
-      body: '',
+      body: ""
     };
   },
-  mathods: {
+  methods: {
     post() {
-      console.log('post!!!!');
+      if (!this.body) {
+        alert("何か入力してください");
+        return;
+      }
+
+      const newMessage = this.createMessage();
+      this.onPost(newMessage);
+      this.body = "";
     },
-  },
+    createMessage() {
+      return {
+        date: new Date().toLocaleString(),
+        body: this.body
+      };
+    }
+  }
 };
 </script>
 
