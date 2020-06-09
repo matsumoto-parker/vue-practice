@@ -2,22 +2,28 @@
   <main class="main-container">
     <TextBox :onPost="addMessage" />
     <div class="devider"></div>
-    <MessageList :messages="reverseMessages" />
+    <Spinner v-if="!initialLoaded" />
+    <p class="no-messages" v-else-if="initialLoaded && messages.length === 0">投稿データ0件</p>
+    <MessageList v-else :messages="reverseMessages" />
   </main>
 </template>
 
 <script>
 import TextBox from "./TextBox";
 import MessageList from "./MessageList";
+import MessageModel from "../models/Message";
+import Spinner from "./Spinner";
 
 export default {
   components: {
     TextBox,
-    MessageList
+    MessageList,
+    Spinner
   },
   data() {
     return {
-      messages: []
+      messages: [],
+      initialLoaded: false
     };
   },
   computed: {
@@ -25,9 +31,24 @@ export default {
       return this.messages.slice().reverse();
     }
   },
+  async created() {
+    const messages = await this.fetchMessages();
+    this.messages = messages;
+    this.initialLoaded = true;
+  },
   methods: {
     addMessage(message) {
       this.messages.push(message);
+    },
+    async fetchMessages() {
+      let messages = [];
+      try {
+        messages = await MessageModel.fetchMessages();
+      } catch (error) {
+        alert(error.message);
+      }
+
+      return messages;
     }
   }
 };
@@ -43,5 +64,8 @@ export default {
 
 .devider {
   border-top: 10px solid #ccc;
+}
+.no-messages {
+  text-align: center;
 }
 </style>

@@ -2,13 +2,14 @@
   <div class="textbox-container">
     <textarea placeholder="ここに入力" class="textbox-input" v-model.trim="body"></textarea>
     <div class="textbox-button">
-      <Button title="投稿" :onClick="post" />
+      <Button title="投稿" :onClick="post" :clickable="canPost" />
     </div>
   </div>
 </template>
 
 <script>
 import Button from "./Button";
+import MessageModel from "../models/Message";
 
 export default {
   components: {
@@ -22,25 +23,24 @@ export default {
   },
   data() {
     return {
-      body: ""
+      body: "",
+      canPost: true
     };
   },
   methods: {
-    post() {
-      if (!this.body) {
-        alert("何か入力してください");
-        return;
+    async post() {
+      this.canPost = false;
+      try {
+        const message = await MessageModel.save({
+          body: this.body
+        });
+        this.onPost(message);
+        this.body = "";
+      } catch (error) {
+        alert(error.message);
       }
 
-      const newMessage = this.createMessage();
-      this.onPost(newMessage);
-      this.body = "";
-    },
-    createMessage() {
-      return {
-        date: new Date().toLocaleString(),
-        body: this.body
-      };
+      this.canPost = true;
     }
   }
 };
