@@ -1,22 +1,17 @@
 <template>
   <div id="app">
-    <h1>こんにちは</h1>
-    <Button title="ボタン1" />
-    <Button title="ボタン2" @onClick="hello" />
+    <h1>Form</h1>
+    <Select />
   </div>
 </template>
 
 <script>
-import Button from "@/components/Button";
+import Select from "@/components/Form/Select";
 
 export default {
+  name: "App",
   components: {
-    Button
-  },
-  methods: {
-    hello(event) {
-      console.log("Hello1!", event);
-    }
+    Select
   }
 };
 </script>
