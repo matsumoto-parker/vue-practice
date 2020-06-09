@@ -10,13 +10,13 @@ export default {
   props: {
     body: {
       type: String,
-      required: true,
+      required: true
     },
     date: {
       type: String,
-      resquired: true,
-    },
-  },
+      resquired: true
+    }
+  }
 };
 </script>
 
